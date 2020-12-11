@@ -7,18 +7,35 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class BruteForcePasswordCracking {
+
     private JPanel mainPanel;
-    private JButton verifyButton;
+    private JButton bruteForcePasswordButton;
     private JButton clearButton;
-    private JTextPane textPane1;
-    private JTextArea textArea1;
+    private JTextPane passwordInputTextPane;
+    private JTextArea passwordResultsTextArea;
 
     int leftLimit = 48; // numeral '0'
     int rightLimit = 122; // letter 'z'
     int targetStringLength = 6;
 
+    /**
+     * Description
+     *
+     * @param args Description
+     */
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Hello");
+        frame.setContentPane(new BruteForcePasswordCracking().mainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
+        frame.setVisible(true);
+    }
+
+    /**
+     * Description
+     */
     public BruteForcePasswordCracking() {
-        verifyButton.addMouseListener(new MouseAdapter() {
+        bruteForcePasswordButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
@@ -36,24 +53,21 @@ public class BruteForcePasswordCracking {
         });
     }
 
-    public static void main(String[] args) {
-
-        JFrame frame = new JFrame("Hello");
-        frame.setContentPane(new BruteForcePasswordCracking().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.setVisible(true);
-    }
-
+    /**
+     * Description
+     */
     private void clearButtonMouseClicked() {
-        textPane1.setText("");
-        textArea1.setText("");
+        passwordInputTextPane.setText("");
+        passwordResultsTextArea.setText("");
     }
 
+    /**
+     * Description
+     */
     private void verifyHash() throws NoSuchAlgorithmException {
-        String hashedPassword = textPane1.getText();
-
-        while (true) {
+        String hashedPassword = passwordInputTextPane.getText();
+        boolean hasFoundHash = false;
+        while (!hasFoundHash) {
             Random random = new Random();
 
             String generatedString = random.ints(leftLimit, rightLimit + 1)
@@ -63,11 +77,18 @@ public class BruteForcePasswordCracking {
                     .toString();
 
             if (SHA1(generatedString).equals(hashedPassword)) {
-                textArea1.setText("Password found: " + generatedString);
+                hasFoundHash = true;
+                passwordResultsTextArea.setText("Password found: " + generatedString);
             }
         }
     }
 
+    /**
+     * Description
+     *
+     * @param text Description
+     * @return Description
+     */
     public static String SHA1(String text) throws NoSuchAlgorithmException {
         MessageDigest md;
         md = MessageDigest.getInstance("SHA-1");
@@ -77,6 +98,12 @@ public class BruteForcePasswordCracking {
         return convertToHex(sha1hash);
     }
 
+    /**
+     * Description
+     *
+     * @param data Description
+     * @return Description
+     */
     private static String convertToHex(byte[] data) {
         StringBuilder buf = new StringBuilder();
         for (byte datum : data) {
