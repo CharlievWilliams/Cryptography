@@ -18,7 +18,7 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="d6b20" class="javax.swing.JTextArea" binding="BchGeneratorTextArea" default-binding="true">
+      <component id="d6b20" class="javax.swing.JTextArea" binding="bchGeneratorTextArea" default-binding="true">
         <constraints>
           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
@@ -26,7 +26,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="6876a" class="javax.swing.JTextArea" binding="BCHDecoderTextArea" default-binding="true">
+      <component id="6876a" class="javax.swing.JTextArea" binding="bchDecoderResultsTextArea" default-binding="true">
         <constraints>
           <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>

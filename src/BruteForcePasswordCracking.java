@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BruteForcePasswordCracking {
 
@@ -16,7 +17,7 @@ public class BruteForcePasswordCracking {
 
     int leftLimit = 48; // numeral '0'
     int rightLimit = 122; // letter 'z'
-    int targetStringLength = 6;
+    int targetStringLength;
 
     /**
      * Description
@@ -66,17 +67,29 @@ public class BruteForcePasswordCracking {
      */
     private void verifyHash() throws NoSuchAlgorithmException {
         String hashedPassword = passwordInputTextPane.getText();
+        String hashedString;
         boolean hasFoundHash = false;
         while (!hasFoundHash) {
-            Random random = new Random();
+            // Randomize String length in range 1 - 6
+            targetStringLength = ThreadLocalRandom.current().nextInt(1, 6 + 1);
 
+            // Generate String
+            Random random = new Random();
             String generatedString = random.ints(leftLimit, rightLimit + 1)
                     .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                     .limit(targetStringLength)
                     .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                    .toString();
+                    .toString()
+                    .toLowerCase();
 
-            if (SHA1(generatedString).equals(hashedPassword)) {
+            System.out.println("Generated String: " + generatedString);
+
+            // Convert to hash
+            hashedString = SHA1(generatedString);
+            System.out.println("Hashed String: " + hashedString);
+
+            // Check against given hash
+            if (hashedString.equals(hashedPassword)) {
                 hasFoundHash = true;
                 passwordResultsTextArea.setText("Password found: " + generatedString);
             }
