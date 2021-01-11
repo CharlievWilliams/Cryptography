@@ -27,7 +27,7 @@ public class BruteForcePasswordCracking {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Hello");
         frame.setContentPane(new BruteForcePasswordCracking().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setVisible(true);
     }

@@ -18,7 +18,7 @@ public class VerifyCreditCard {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Verify Credit Card Number");
         frame.setContentPane(new VerifyCreditCard().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setVisible(true);
     }
