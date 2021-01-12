@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 public class TextEncryptionApp {
 
@@ -51,6 +51,9 @@ public class TextEncryptionApp {
                 reverseSteganography();
             }
         });
+        encryptedMessageTextArea.setLineWrap(true);
+        decryptedMessage2TextArea.setLineWrap(true);
+        decryptedMessage1TextArea.setLineWrap(true);
     }
 
     /**
@@ -68,25 +71,25 @@ public class TextEncryptionApp {
     /**
      * Blum Blum Shlub Generator
      */
-    private String pseudoRandomGenerator() {
+    private byte[] pseudoRandomGenerator() {
         int primeNumber1 = 7;
         int primeNumber2 = 11;
         int m = primeNumber1 * primeNumber2;
         int count = 3; // CoPrime
         int modularisedCount;
-        StringBuilder key = new StringBuilder();
+        byte[] key = new byte[8];
 
         for (int i = 0; i < 8; i++) {
             count = count * count;
             modularisedCount = count % m;
             if (modularisedCount % 2 == 0) {
-                key.append("0");
+                key[i] = 0;
             } else {
-                key.append("1");
+                key[i] = 1;
             }
         }
 
-        return key.toString();
+        return key;
     }
 
     /**
@@ -94,40 +97,31 @@ public class TextEncryptionApp {
      */
     private void oneTimePadEncryption() {
         // Create key
-        String key = pseudoRandomGenerator();
+        byte[] key = pseudoRandomGenerator();
 
-        // Retrieve text and get bytes
-        String inputString = message2TextPane.getText();
+        // Retrieve text and get byte representation
+        byte[] plaintext = message2TextPane.getText().getBytes(StandardCharsets.UTF_8);
 
-        // Convert to Hexadecimal
-        String keyHex = toHex(key);
-        String secretHex = toHex(inputString);
+        StringBuilder binaryRepresentation = new StringBuilder();
+        byte[] encrypted = new byte[key.length];
 
-        // String result = keyHex ^ secretHex; TODO: Fix this
-
-        StringBuilder cipheredText = new StringBuilder();
-/*
-        // Perform XOR with secret hex and key hex
-        for (int i = 0; i < secretHex.length; i++) {
-            encrypted[i] = (byte) (secretString[i] ^ key[i]);
+        for (int i = 0; i < plaintext.length; i++) {
+            encrypted[i] = (byte) (plaintext[i] ^ key[i]);
+            binaryRepresentation.append(String.format("%8s", Integer.toBinaryString(encrypted[i] & 0xFF)).replace(' ', '0'));
         }
-        */
-        // TODO: Convert to binary
-        performSteganography();
+
+        performSteganography(String.valueOf(binaryRepresentation));
     }
 
     /**
      * Description
      */
-    private void performSteganography() {
+    private void performSteganography(String binaryRepresentation) {
         // Default messages
-        String secretMessage = "1001 0011 1010 1010";
-        String normalMessage = "How are you today? I had a very busy day! I travelled 400 miles returning to London. " +
-                "It was windy and rainy. The traffic was bad too. I managed to finish my job, ref No 3789. But I am " +
-                "really tired. If possible, can we cancel tonight’s meeting?";
+        String normalMessage = message1TextPane.getText();
 
         // Format binary
-        String formattedSecretMessage = secretMessage.replaceAll("\\s+", "");
+        String formattedSecretMessage = binaryRepresentation.replaceAll("\\s+", "");
         formattedSecretMessage = formattedSecretMessage + "x ";
 
         int count = 0;
@@ -135,19 +129,23 @@ public class TextEncryptionApp {
         StringBuilder newMessage = new StringBuilder();
         for (int i = 0; i < normalMessage.length(); i++) {
 
-            // TODO: Convert to switch
             if (normalMessage.charAt(i) == ' ') {
-                if (formattedSecretMessage.charAt(count) == '0') {
-                    newMessage.append(" ");
-                    count++;
-                } else if (formattedSecretMessage.charAt(count) == '1') {
-                    newMessage.append("  ");
-                    count++;
-                } else if (formattedSecretMessage.charAt(count) == 'x') {
-                    newMessage.append("   ");
-                    count++;
-                } else if (formattedSecretMessage.charAt(count) == ' ') {
-                    newMessage.append(" ");
+                switch (formattedSecretMessage.charAt(count)) {
+                    case '0':
+                        newMessage.append(" ");
+                        count++;
+                        break;
+                    case '1':
+                        newMessage.append("  ");
+                        count++;
+                        break;
+                    case 'x':
+                        newMessage.append("   ");
+                        count++;
+                        break;
+                    case ' ':
+                        newMessage.append(" ");
+                        break;
                 }
             } else {
                 newMessage.append(normalMessage.charAt(i));
@@ -161,52 +159,59 @@ public class TextEncryptionApp {
      */
     private void reverseSteganography() {
         // Default messages
-        String steganographyMessage = "How  are you today?  I had a  very  busy  day! I  travelled 400  miles " +
-                "returning  to London.   It was windy and rainy. The traffic was bad too. I managed to finish my " +
-                "job, ref No 3789. But I am really tired. If possible, can we cancel tonight’s meeting?";
+        String steganographyMessage = encryptedMessageTextPane.getText();
 
-        int loop = 0;
+        int count = 0;
         boolean messageFound = false;
         // Construct new message
         StringBuilder secretMessage = new StringBuilder();
         StringBuilder normalMessage = new StringBuilder();
 
-        while (loop < steganographyMessage.length()) {
-            if (steganographyMessage.charAt(loop) == ' ' && !messageFound) {
-                if (steganographyMessage.charAt(loop + 1) != ' ') {
+        while (count < steganographyMessage.length()) {
+            if (steganographyMessage.charAt(count) == ' ' && !messageFound) {
+                if (steganographyMessage.charAt(count + 1) != ' ') {
                     normalMessage.append(" ");
                     secretMessage.append("0");
-                    loop++;
-                } else if (steganographyMessage.charAt(loop + 1) == ' ' && steganographyMessage.charAt(loop + 2) != ' ') {
+                    count++;
+                } else if (steganographyMessage.charAt(count + 1) == ' ' && steganographyMessage.charAt(count + 2) != ' ') {
                     normalMessage.append(" ");
                     secretMessage.append("1");
-                    loop+=2;
-                } else if (steganographyMessage.charAt(loop + 1) == ' ' && steganographyMessage.charAt(loop + 2) == ' ') {
+                    count += 2;
+                } else if (steganographyMessage.charAt(count + 1) == ' ' && steganographyMessage.charAt(count + 2) == ' ') {
                     normalMessage.append(" ");
-                    loop+=3;
+                    count += 3;
                     messageFound = true;
                 }
             } else {
-                normalMessage.append(steganographyMessage.charAt(loop));
-                loop++;
+                normalMessage.append(steganographyMessage.charAt(count));
+                count++;
             }
         }
-        decryptedMessage1TextArea.setText(String.valueOf(secretMessage));
+
+        oneTimePadDecryption(String.valueOf(secretMessage));
         decryptedMessage2TextArea.setText(String.valueOf(normalMessage));
     }
 
     /**
      * Description
      */
-    private void oneTimePadDecryption() {
+    private void oneTimePadDecryption(String secretMessage) {
+        // Create key
+        byte[] key = pseudoRandomGenerator();
 
-    }
+        // Retrieve text and get byte representation
+        byte[] plaintext = secretMessage.getBytes(StandardCharsets.UTF_8);
 
-    /**
-     * Description
-     */
-    private String toHex(String arg) {
-        return String.format("%020x", new BigInteger(1, arg.getBytes()));
+        byte[] decrypted = new byte[plaintext.length];
+
+        for (int i = 0; i < key.length; i++) {
+            decrypted[i] = (byte) (plaintext[i] ^ key[i]);
+            // TODO: Convert binary to String
+        }
+
+        String s = new String(decrypted, StandardCharsets.UTF_8);
+        decryptedMessage1TextArea.setText(s);
+
     }
 
 }
