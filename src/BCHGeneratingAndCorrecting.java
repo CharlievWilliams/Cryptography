@@ -278,27 +278,31 @@ public class BCHGeneratingAndCorrecting {
             q = mod(syndrome1 * syndrome4 - syndrome2 * syndrome3);
             r = mod(syndrome3 * syndrome3 - syndrome2 * syndrome4);
             if (p == 0 && q == 0 && r == 0) { // Single Error
-                errorMagnitude1 = syndrome1 % 11;
+                errorMagnitude1 = syndrome1;
                 errorPosition1 = (syndrome2 / errorMagnitude1) % 11;
                 int[] result = resolveSingleError(errorPosition1, errorMagnitude1);
                 bchDecoderResultsTextArea.setText(
                         "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|\\]|,|\\s", "")
                 );
-/*            } else if (Math.sqrt(mod(q * q - 4 * p * r)) == 0) { // More than Double error TODO: This is broken
-                bchDecoderResultsTextArea.setText("More than two errors");*/
             } else {
-                // TODO: I think this is being calculated incorrectly
-                int temp = q * q;
-                int temp2 = 4 * p * r;
+                int beforeTemp = mod(q);
+
+                int temp = squared(beforeTemp);
+                int temp2 = 4 * beforeTemp * r;
                 int temp3 = temp - temp2;
                 int temp4 = mod(temp3);
-                double temp5 = Math.sqrt(temp4);
-                int temp6 = (int) temp5;
+                int temp5 = squareRoot(temp4);
+                int temp6 = negative(q);
 
-                errorPosition1 = mod((-q + temp6) / 2 * p);
-                errorPosition2 = mod((-q - temp6) / 2 * p);
-                errorMagnitude1 = mod((errorPosition1 * syndrome1 - syndrome2) / (errorPosition1 - errorPosition2));
-                errorMagnitude2 = mod(syndrome1 - errorMagnitude1);
+                errorPosition1 = mod((temp6 + temp5) / 2 * p);
+                errorPosition2 = mod((temp6 - temp5) / 2 * p);
+
+                // Calculate positions and magnitudes
+                errorPosition1 = mod(((negative(q) + squareRoot((squared(q)) - 4 * p * r)) / 2 * p));
+                errorPosition2 = mod(((negative(q) - squareRoot((squared(q)) - 4 * p * r)) / 2 * p));
+                errorMagnitude2 = mod((errorPosition1 * syndrome1 - syndrome2) / (errorPosition1 - errorPosition2));
+                errorMagnitude1 = mod(syndrome1 - errorMagnitude2);
+
                 if (errorPosition1 == 0 || errorPosition2 == 0) { // More than Double error
                     bchDecoderResultsTextArea.setText("More than two errors");
                 } else {
@@ -349,4 +353,71 @@ public class BCHGeneratingAndCorrecting {
         inputArray[errorPosition2 - 1] = inputArray[errorPosition2 - 1] - errorMagnitude2;
         return inputArray;
     }
+
+    private int negative(int number) {
+        switch (number) {
+            case 1:
+                return 10;
+            case 2:
+                return 9;
+            case 3:
+                return 8;
+            case 4:
+                return 7;
+            case 5:
+                return 6;
+            case 6:
+                return 5;
+            case 7:
+                return 4;
+            case 8:
+                return 3;
+            case 9:
+                return 2;
+            case 10:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    private int squared(int number) {
+        switch (number) {
+            case 1:
+            case 10:
+                return 1;
+            case 2:
+            case 9:
+                return 4;
+            case 3:
+            case 8:
+                return 9;
+            case 4:
+            case 7:
+                return 5;
+            case 5:
+            case 6:
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
+    private int squareRoot(int number) {
+        switch (number) {
+            case 1:
+                return 1;
+            case 3:
+                return 5;
+            case 4:
+                return 2;
+            case 5:
+                return 4;
+            case 9:
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
 }

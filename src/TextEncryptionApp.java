@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.nio.charset.StandardCharsets;
 
 public class TextEncryptionApp {
 
@@ -9,9 +8,9 @@ public class TextEncryptionApp {
     private JTextPane message1TextPane;
     private JTextPane message2TextPane;
     private JTextPane encryptedMessageTextPane;
-    private JTextArea encryptedMessageTextArea;
-    private JTextArea decryptedMessage1TextArea;
-    private JTextArea decryptedMessage2TextArea;
+    public JTextArea encryptedMessageTextArea;
+    public JTextArea decryptedMessage1TextArea;
+    public JTextArea decryptedMessage2TextArea;
     private JButton encryptButton;
     private JButton decryptButton;
     private JButton clearButton;
@@ -22,7 +21,7 @@ public class TextEncryptionApp {
      * @param args description
      */
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Verify Credit Card Number");
+        JFrame frame = new JFrame("Text Encryption App");
         frame.setContentPane(new TextEncryptionApp().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -48,7 +47,9 @@ public class TextEncryptionApp {
         decryptButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                reverseSteganography();
+                decryptedMessage2TextArea.setText(
+                        SudokuSteganography.reverseSudokuSteganography(encryptedMessageTextPane.getText())
+                );
             }
         });
         encryptedMessageTextArea.setLineWrap(true);
@@ -69,149 +70,37 @@ public class TextEncryptionApp {
     }
 
     /**
-     * Blum Blum Shlub Generator
-     */
-    private byte[] pseudoRandomGenerator() {
-        int primeNumber1 = 7;
-        int primeNumber2 = 11;
-        int m = primeNumber1 * primeNumber2;
-        int count = 3; // CoPrime
-        int modularisedCount;
-        byte[] key = new byte[8];
-
-        for (int i = 0; i < 8; i++) {
-            count = count * count;
-            modularisedCount = count % m;
-            if (modularisedCount % 2 == 0) {
-                key[i] = 0;
-            } else {
-                key[i] = 1;
-            }
-        }
-
-        return key;
-    }
-
-    /**
      * Description
      */
-    private void oneTimePadEncryption() {
-        // Create key
-        byte[] key = pseudoRandomGenerator();
+    public void oneTimePadEncryption() {
+        // Retrieve text
+        String plaintext = message2TextPane.getText();
 
-        // Retrieve text and get byte representation
-        byte[] plaintext = message2TextPane.getText().getBytes(StandardCharsets.UTF_8);
+        // Create key
+        String key = PseudoRandomGenerator.pseudoRandomGenerator(plaintext.length());
 
         StringBuilder binaryRepresentation = new StringBuilder();
-        byte[] encrypted = new byte[key.length];
+        int[] encrypted = new int[key.length()];
 
-        for (int i = 0; i < plaintext.length; i++) {
-            encrypted[i] = (byte) (plaintext[i] ^ key[i]);
-            binaryRepresentation.append(String.format("%8s", Integer.toBinaryString(encrypted[i] & 0xFF)).replace(' ', '0'));
+        for (int i = 0; i < plaintext.length(); i++) {
+            encrypted[i] = (plaintext.charAt(i) ^ key.charAt(i));
+            binaryRepresentation.append(String.format("%8s", Integer.toBinaryString(encrypted[i] & 0xFF))
+                    .replace(' ', '0')
+            );
         }
-
-        performSteganography(String.valueOf(binaryRepresentation));
+        encryptedMessageTextArea.setText(
+                SudokuSteganography.performFilmSteganography(
+                        String.valueOf(binaryRepresentation), message1TextPane.getText()
+                )
+        );
     }
 
     /**
      * Description
      */
-    private void performSteganography(String binaryRepresentation) {
-        // Default messages
-        String normalMessage = message1TextPane.getText();
+    public static void oneTimePadDecryption(String binaryRepresentation) {
+        // TODO: Make this work
 
-        // Format binary
-        String formattedSecretMessage = binaryRepresentation.replaceAll("\\s+", "");
-        formattedSecretMessage = formattedSecretMessage + "x ";
-
-        int count = 0;
-        // Construct new message
-        StringBuilder newMessage = new StringBuilder();
-        for (int i = 0; i < normalMessage.length(); i++) {
-
-            if (normalMessage.charAt(i) == ' ') {
-                switch (formattedSecretMessage.charAt(count)) {
-                    case '0':
-                        newMessage.append(" ");
-                        count++;
-                        break;
-                    case '1':
-                        newMessage.append("  ");
-                        count++;
-                        break;
-                    case 'x':
-                        newMessage.append("   ");
-                        count++;
-                        break;
-                    case ' ':
-                        newMessage.append(" ");
-                        break;
-                }
-            } else {
-                newMessage.append(normalMessage.charAt(i));
-            }
-        }
-        encryptedMessageTextArea.setText(newMessage.toString());
+        // decryptedMessage1TextArea.setText(binaryRepresentation);
     }
-
-    /**
-     * Description
-     */
-    private void reverseSteganography() {
-        // Default messages
-        String steganographyMessage = encryptedMessageTextPane.getText();
-
-        int count = 0;
-        boolean messageFound = false;
-        // Construct new message
-        StringBuilder secretMessage = new StringBuilder();
-        StringBuilder normalMessage = new StringBuilder();
-
-        while (count < steganographyMessage.length()) {
-            if (steganographyMessage.charAt(count) == ' ' && !messageFound) {
-                if (steganographyMessage.charAt(count + 1) != ' ') {
-                    normalMessage.append(" ");
-                    secretMessage.append("0");
-                    count++;
-                } else if (steganographyMessage.charAt(count + 1) == ' ' && steganographyMessage.charAt(count + 2) != ' ') {
-                    normalMessage.append(" ");
-                    secretMessage.append("1");
-                    count += 2;
-                } else if (steganographyMessage.charAt(count + 1) == ' ' && steganographyMessage.charAt(count + 2) == ' ') {
-                    normalMessage.append(" ");
-                    count += 3;
-                    messageFound = true;
-                }
-            } else {
-                normalMessage.append(steganographyMessage.charAt(count));
-                count++;
-            }
-        }
-
-        oneTimePadDecryption(String.valueOf(secretMessage));
-        decryptedMessage2TextArea.setText(String.valueOf(normalMessage));
-    }
-
-    /**
-     * Description
-     */
-    private void oneTimePadDecryption(String secretMessage) {
-        // Create key
-        byte[] key = pseudoRandomGenerator();
-
-        // Retrieve text and get byte representation
-        byte[] plaintext = secretMessage.getBytes(StandardCharsets.UTF_8);
-
-        byte[] decrypted = new byte[plaintext.length];
-
-        for (int i = 0; i < key.length; i++) {
-            decrypted[i] = (byte) (plaintext[i] ^ key[i]);
-            // TODO: Convert binary to String
-        }
-
-        String s = new String(decrypted, StandardCharsets.UTF_8);
-        decryptedMessage1TextArea.setText(s);
-
-    }
-
 }
