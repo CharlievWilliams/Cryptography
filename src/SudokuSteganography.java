@@ -9,6 +9,8 @@ public class SudokuSteganography {
     /**
      * Description
      *
+     * @param binaryRepresentation Description
+     * @param normalMessage Description
      * @return Description
      */
     public static String performFilmSteganography(String binaryRepresentation, String normalMessage) {
@@ -61,6 +63,7 @@ public class SudokuSteganography {
     /**
      * Description
      *
+     * @param steganographyMessage Description
      * @return Description
      */
     public static String reverseSudokuSteganography(String steganographyMessage) {
@@ -103,5 +106,4 @@ public class SudokuSteganography {
         TextEncryptionApp.oneTimePadDecryption(String.valueOf(secretMessage));
         return String.valueOf(normalMessage);
     }
-
 }

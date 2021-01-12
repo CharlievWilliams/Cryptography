@@ -2,6 +2,9 @@ public class PseudoRandomGenerator {
 
     /**
      * Blum Blum Shlub Generator
+     *
+     * @param length Description
+     * @return Description
      */
     public static String pseudoRandomGenerator(int length) {
         int primeNumber1 = 7;
@@ -24,5 +27,4 @@ public class PseudoRandomGenerator {
 
         return String.valueOf(key);
     }
-
 }

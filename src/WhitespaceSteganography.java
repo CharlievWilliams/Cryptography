@@ -3,6 +3,8 @@ public class WhitespaceSteganography {
     /**
      * Description
      *
+     * @param binaryRepresentation Description
+     * @param normalMessage Description
      * @return Description
      */
     public static String performSimpleSteganography(String binaryRepresentation, String normalMessage) {
@@ -44,6 +46,7 @@ public class WhitespaceSteganography {
     /**
      * Description
      *
+     * @param steganographyMessage Description
      * @return Description
      */
     public static String reverseSimpleSteganography(String steganographyMessage) {
@@ -77,5 +80,4 @@ public class WhitespaceSteganography {
         TextEncryptionApp.oneTimePadDecryption(String.valueOf(secretMessage));
         return String.valueOf(normalMessage);
     }
-
 }
