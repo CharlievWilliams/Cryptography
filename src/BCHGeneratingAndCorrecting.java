@@ -27,7 +27,7 @@ public class BCHGeneratingAndCorrecting {
      * @param args Description
      */
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Hello");
+        JFrame frame = new JFrame("BCH Generating and Correcting");
         frame.setContentPane(new BCHGeneratingAndCorrecting().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
