@@ -1,10 +1,10 @@
 public class SyndromeLibrary {
 
     /**
-     * Description
+     * Calculate the first syndrome from a 10 digit BCH(10, 6) code.
      *
-     * @param inputArray Description
-     * @return Description
+     * @param inputArray The 10 digit code in an int array.
+     * @return the first syndrome in an int format.
      */
     public static int calculateSyndrome1(int[] inputArray) {
         return (inputArray[0] +
@@ -20,10 +20,10 @@ public class SyndromeLibrary {
     }
 
     /**
-     * Description
+     * Calculate the second syndrome from a 10 digit BCH(10, 6) code.
      *
-     * @param inputArray Description
-     * @return Description
+     * @param inputArray The 10 digit code in an int array.
+     * @return the second syndrome in an int format.
      */
     public static int calculateSyndrome2(int[] inputArray) {
         return (inputArray[0] +
@@ -39,10 +39,10 @@ public class SyndromeLibrary {
     }
 
     /**
-     * Description
+     * Calculate the third syndrome from a 10 digit BCH(10, 6) code.
      *
-     * @param inputArray Description
-     * @return Description
+     * @param inputArray The 10 digit code in an int array.
+     * @return the third syndrome in an int format.
      */
     public static int calculateSyndrome3(int[] inputArray) {
         return (inputArray[0] +
@@ -58,10 +58,10 @@ public class SyndromeLibrary {
     }
 
     /**
-     * Description
+     * Calculate the fourth syndrome from a 10 digit BCH(10, 6) code.
      *
-     * @param inputArray Description
-     * @return Description
+     * @param inputArray The 10 digit code in an int array.
+     * @return the fourth syndrome in an int format.
      */
     public static int calculateSyndrome4(int[] inputArray) {
         return (inputArray[0] +

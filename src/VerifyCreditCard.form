@@ -14,7 +14,9 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Credit card number"/>
+        </properties>
       </component>
       <component id="95d71" class="javax.swing.JTextArea" binding="resultsTextArea" default-binding="true">
         <constraints>
@@ -22,7 +24,12 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <toolTipText value="Results"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
       <component id="958c8" class="javax.swing.JButton" binding="verifyCreditCardButton" default-binding="true">
         <constraints>

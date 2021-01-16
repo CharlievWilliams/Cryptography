@@ -1,10 +1,10 @@
 public class ModuloLibrary {
 
     /**
-     * Description
+     * Perform mod 11 on an integer and return a positive value.
      *
-     * @param input Description
-     * @return Description
+     * @param input the integer the calculation will be performed on.
+     * @return the input under mod 11.
      */
     public static int mod(int input) {
         int result = input % 11;
@@ -15,21 +15,22 @@ public class ModuloLibrary {
     }
 
     /**
-     * Description
+     * Calculate a negation under mod 11.
      *
-     * @param negative Description
-     * @return Description
+     * @param number The integer the calculation will be performed on.
+     * @param negative The integer that will be subtracted from the above number.
+     * @return the calculation under mod 11.
      */
     public static int minus(int number, int negative) {
         return mod(number - negative);
     }
 
     /**
-     * Description
+     * Perform a division under mod 11.
      *
-     * @param number  Description
-     * @param divisor Description
-     * @return Description
+     * @param number  The integer the calculation will be performed on.
+     * @param divisor The integer that will be the divisor of the above number.
+     * @return the calculation under mod 11.
      */
     public static int inverse(int number, int divisor) {
         switch (divisor) {
@@ -59,20 +60,20 @@ public class ModuloLibrary {
     }
 
     /**
-     * Description
+     * Perform a square function under mod 11.
      *
-     * @param number Description
-     * @return Description
+     * @param number The integer the calculation will be performed on.
+     * @return the calculation under mod 11.
      */
     public static int squared(int number) {
         return mod(number * number);
     }
 
     /**
-     * Description
+     * Perform a square root function under mod 11.
      *
-     * @param number Description
-     * @return Description
+     * @param number The integer the calculation will be performed on.
+     * @return the calculation under mod 11.
      */
     public static int squareRoot(int number) {
         switch (number) {

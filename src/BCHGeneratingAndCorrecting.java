@@ -15,9 +15,10 @@ public class BCHGeneratingAndCorrecting {
     private JTextArea bchGeneratorTextArea;
     private JTextArea bchDecoderResultsTextArea;
     private JTextArea checkDigitResultsTextArea;
+
     int checkingDigit1, checkingDigit2, checkingDigit3, checkingDigit4; // Checking digits
     int syndrome1, syndrome2, syndrome3, syndrome4; // Syndromes
-    int p, q, r;
+    int p, q, r; // Error position and magnitude calculators
     int errorMagnitude1, errorPosition1, errorPosition2, errorMagnitude2;
     int[] inputArray = new int[10];
 
@@ -75,24 +76,33 @@ public class BCHGeneratingAndCorrecting {
         checkDigitResultsTextArea.setText("");
     }
 
+    /**
+     * Description
+     * TODO: Move this logic to CheckingDigitLibrary
+     */
     private void createCheckingDigitsButtonClicked() {
 
         int[] inputArray = new int[6];
         String input = sixDigitInputTextPane.getText();
 
-        for (int i = 0; i < input.length(); i++) {
-            inputArray[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
-        }
+        try {
+            for (int i = 0; i < input.length(); i++) {
+                inputArray[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+            }
 
-        checkingDigit1 = CheckingDigitLibrary.calculateDigit7(inputArray);
-        checkingDigit2 = CheckingDigitLibrary.calculateDigit8(inputArray);
-        checkingDigit3 = CheckingDigitLibrary.calculateDigit9(inputArray);
-        checkingDigit4 = CheckingDigitLibrary.calculateDigit10(inputArray);
+            checkingDigit1 = CheckingDigitLibrary.calculateDigit7(inputArray);
+            checkingDigit2 = CheckingDigitLibrary.calculateDigit8(inputArray);
+            checkingDigit3 = CheckingDigitLibrary.calculateDigit9(inputArray);
+            checkingDigit4 = CheckingDigitLibrary.calculateDigit10(inputArray);
 
-        if (checkingDigit1 == 10 || checkingDigit2 == 10 || checkingDigit3 == 10 || checkingDigit4 == 10) {
-            checkDigitResultsTextArea.setText("Unusable Number");
-        } else {
-            checkDigitResultsTextArea.setText(input + checkingDigit1 + checkingDigit2 + checkingDigit3 + checkingDigit4);
+            if (checkingDigit1 == 10 || checkingDigit2 == 10 || checkingDigit3 == 10 || checkingDigit4 == 10) {
+                checkDigitResultsTextArea.setText("Unusable Number");
+            } else {
+                checkDigitResultsTextArea.setText(input + checkingDigit1 + checkingDigit2 + checkingDigit3 + checkingDigit4);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            checkDigitResultsTextArea.setText("Invalid input");
         }
     }
 
@@ -102,21 +112,25 @@ public class BCHGeneratingAndCorrecting {
     private void createSyndromesButtonClicked() {
         String userInput = tenDigitInputTextPane.getText();
 
-        for (int i = 0; i < userInput.length(); i++) {
-            inputArray[i] = Integer.parseInt(String.valueOf(userInput.charAt(i)));
+        try {
+            for (int i = 0; i < 10; i++) {
+                inputArray[i] = Integer.parseInt(String.valueOf(userInput.charAt(i)));
+            }
+            syndrome1 = SyndromeLibrary.calculateSyndrome1(inputArray);
+            syndrome2 = SyndromeLibrary.calculateSyndrome2(inputArray);
+            syndrome3 = SyndromeLibrary.calculateSyndrome3(inputArray);
+            syndrome4 = SyndromeLibrary.calculateSyndrome4(inputArray);
+
+            bchGeneratorTextArea.setText(syndrome1 + " " + syndrome2 + " " + syndrome3 + " " + syndrome4);
+        } catch (Exception e) {
+            e.printStackTrace();
+            bchGeneratorTextArea.setText("Invalid input");
         }
-
-        syndrome1 = SyndromeLibrary.calculateSyndrome1(inputArray);
-        syndrome2 = SyndromeLibrary.calculateSyndrome2(inputArray);
-        syndrome3 = SyndromeLibrary.calculateSyndrome3(inputArray);
-        syndrome4 = SyndromeLibrary.calculateSyndrome4(inputArray);
-
-        bchGeneratorTextArea.setText(syndrome1 + " " + syndrome2 + " " + syndrome3 + " " + syndrome4);
-
     }
 
     /**
      * Description
+     * TODO: Potentially separate this logic into functions
      */
     private void identifyErrorsButtonClicked() {
         if (syndrome1 == 0 && syndrome2 == 0 && syndrome3 == 0 && syndrome4 == 0) { // No errors
@@ -133,33 +147,35 @@ public class BCHGeneratingAndCorrecting {
                         "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|\\]|,|\\s", "")
                 );
             } else {
+                /*
+                 * Calculate error positions - Formulae for error positions under mod 11
+                 * errorPosition1 = (-Q + sqrt(Q * Q - 4 * P * R)) / 2 * P
+                 * errorPosition1 = (-Q - sqrt(Q * Q - 4 * P * R)) / 2 * P
+                 * */
 
-                // TODO: Tidy this shit up
-                int partOne = ModuloLibrary.minus(0, q);
-                int partTwo = ModuloLibrary.squared(q);
-                int partThree = ModuloLibrary.mod(4 * p * r);
-                int partFour = ModuloLibrary.minus(partTwo, partThree);
-                if (ModuloLibrary.squareRoot(partFour) == 0) {
+                int innerBrackets = ModuloLibrary.minus(ModuloLibrary.squared(q), ModuloLibrary.mod(4 * p * r));
+                // Check for scenario with more than two errors
+                if (ModuloLibrary.squareRoot(innerBrackets) == 0) {
                     bchDecoderResultsTextArea.setText("More than two errors");
                     return;
                 }
-                int partFive = ModuloLibrary.squareRoot(partFour);
-                int partSix = ModuloLibrary.mod(partOne + partFive);
-                int partSeven = ModuloLibrary.mod(2 * p);
-                errorPosition1 = ModuloLibrary.inverse(partSix, partSeven);
+                errorPosition1 = ModuloLibrary.inverse(ModuloLibrary.mod(ModuloLibrary.minus(0, q) +
+                        ModuloLibrary.squareRoot(innerBrackets)), ModuloLibrary.mod(2 * p));
+                errorPosition2 = ModuloLibrary.inverse(ModuloLibrary.minus(ModuloLibrary.minus(0, q),
+                        ModuloLibrary.squareRoot(innerBrackets)), ModuloLibrary.mod(2 * p));
 
-                int altPartSix = ModuloLibrary.minus(partOne, partFive);
-                errorPosition2 = ModuloLibrary.inverse(altPartSix, partSeven);
+                /*
+                 * Calculate error magnitudes - Formulae for error magnitudes under mod 11
+                 * errorMagnitude2 = (errorPosition1 * syndrome1 - syndrome2) / (errorPosition1 - errorPosition2)
+                 * errorMagnitude1 = syndrome1 - errorMagnitude2
+                 * */
 
-                // Calculate positions and magnitudes
-                // TODO: Also tidy this bollocks up
-                int orderOne = ModuloLibrary.mod(errorPosition1 * syndrome1);
-                int orderTwo = ModuloLibrary.minus(orderOne, syndrome2);
-                int orderThree = ModuloLibrary.minus(errorPosition1, errorPosition2);
-                errorMagnitude2 = ModuloLibrary.inverse(orderTwo, orderThree);
+                errorMagnitude2 = ModuloLibrary.inverse(ModuloLibrary.minus(ModuloLibrary.mod(
+                        errorPosition1 * syndrome1), syndrome2), ModuloLibrary.minus(errorPosition1, errorPosition2));
                 errorMagnitude1 = ModuloLibrary.minus(syndrome1, errorMagnitude2);
 
-                if (errorPosition1 == 0 || errorPosition2 == 0) { // More than Double error
+                // Check for scenario with more than two errors
+                if (errorPosition1 == 0 || errorPosition2 == 0) {
                     bchDecoderResultsTextArea.setText("More than two errors");
                 } else {
                     int[] result = resolveDoubleError(errorPosition1, errorPosition2, errorMagnitude1, errorMagnitude2);
@@ -172,9 +188,10 @@ public class BCHGeneratingAndCorrecting {
                         }
                     }
 
-                    if (!isTen) { // Double error
-                        bchDecoderResultsTextArea.setText("Two errors. Corrected to " + Arrays.toString(result).replaceAll("\\[|\\]|,|\\s", ""));
-                    } else { // More than double error
+                    if (!isTen) { // Check for scenario with double errors
+                        bchDecoderResultsTextArea.setText("Two errors. Corrected to " + Arrays.toString(result)
+                                .replaceAll("\\[|\\]|,|\\s", ""));
+                    } else { // More than two errors
                         bchDecoderResultsTextArea.setText("More than two errors");
                     }
                 }

@@ -24,7 +24,11 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
       <component id="6876a" class="javax.swing.JTextArea" binding="bchDecoderResultsTextArea" default-binding="true">
         <constraints>
@@ -32,7 +36,11 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
       <component id="cfcae" class="javax.swing.JButton" binding="identifyErrorsButton" default-binding="true">
         <constraints>
@@ -85,7 +93,11 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
       <component id="92913" class="javax.swing.JLabel">
         <constraints>

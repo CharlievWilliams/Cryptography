@@ -54,7 +54,11 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
       <component id="34b9c" class="javax.swing.JTextPane" binding="encryptedMessageTextPane">
         <constraints>
@@ -91,7 +95,11 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
       <component id="5305d" class="javax.swing.JTextArea" binding="decryptedMessage2TextArea">
         <constraints>
@@ -99,7 +107,11 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="true"/>
+        </properties>
       </component>
     </children>
   </grid>

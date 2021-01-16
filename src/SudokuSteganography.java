@@ -7,13 +7,14 @@ public class SudokuSteganography {
     public static String[] anyNumber = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
     /**
-     * Description
+     * Perform Sudoku Steganography to hide a secret message within a facade message by encoding the binary
+     * representation into a sudoku grid.
      *
-     * @param binaryRepresentation Description
-     * @param normalMessage Description
-     * @return Description
+     * @param binaryRepresentation A binary representation of the secret message.
+     * @param normalMessage The facade message in String format.
+     * @return The normal message with the secret message hidden within it in the form of a sudoku grid.
      */
-    public static String performFilmSteganography(String binaryRepresentation, String normalMessage) {
+    public static String performSudokuSteganography(String binaryRepresentation, String normalMessage) {
 
         // Format binary
         String formattedSecretMessage = binaryRepresentation.replaceAll("\\s+", "");
@@ -61,10 +62,11 @@ public class SudokuSteganography {
     }
 
     /**
-     * Description
+     * Reverse the Sudoku steganography by separating the binary representation of the secret message from the facade
+     * message.
      *
-     * @param steganographyMessage Description
-     * @return Description
+     * @param steganographyMessage The message that has been created through sudoku steganography.
+     * @return The facade message in its original format.
      */
     public static String reverseSudokuSteganography(String steganographyMessage) {
 

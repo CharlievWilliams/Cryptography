@@ -59,7 +59,7 @@ public class VerifyCreditCard {
 
         try {
             // Convert String to Array
-            for (int i = 0; i < formattedCreditCardInput.length(); i++) {
+            for (int i = 0; i < 16; i++) {
                 creditCardArray[i] = Integer.parseInt(String.valueOf(formattedCreditCardInput.charAt(i)));
             }
 

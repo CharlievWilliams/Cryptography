@@ -1,10 +1,10 @@
 public class PseudoRandomGenerator {
 
     /**
-     * Blum Blum Shlub Generator
+     * Blum Blum Shlub Generator that will generate the same sequence of binary strings with every execution.
      *
-     * @param length Description
-     * @return Description
+     * @param length The length of the message string. The generator will create a key of equal length.
+     * @return the generated string.
      */
     public static String pseudoRandomGenerator(int length) {
         int primeNumber1 = 7;

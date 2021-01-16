@@ -1,11 +1,12 @@
 public class WhitespaceSteganography {
 
     /**
-     * Description
+     * Perform Sudoku Steganography to hide a secret message within a facade message by encoding the binary
+     * representation into the whitespaces of the facade message.
      *
-     * @param binaryRepresentation Description
-     * @param normalMessage Description
-     * @return Description
+     * @param binaryRepresentation A binary representation of the secret message.
+     * @param normalMessage The facade message in String format.
+     * @return The normal message with the secret message hidden within it by duplicating whitespace.
      */
     public static String performSimpleSteganography(String binaryRepresentation, String normalMessage) {
 
@@ -44,10 +45,11 @@ public class WhitespaceSteganography {
     }
 
     /**
-     * Description
+     * Reverse the whitespace steganography by separating the binary representation of the secret message from the
+     * facade message.
      *
-     * @param steganographyMessage Description
-     * @return Description
+     * @param steganographyMessage The message that has been created through whitespace steganography.
+     * @return The facade message in its original format.
      */
     public static String reverseSimpleSteganography(String steganographyMessage) {
         int count = 0;

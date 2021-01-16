@@ -24,7 +24,7 @@ public class TextEncryptionApp {
         JFrame frame = new JFrame("Text Encryption App");
         frame.setContentPane(new TextEncryptionApp().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(1400, 800);
         frame.setVisible(true);
     }
 
@@ -52,9 +52,6 @@ public class TextEncryptionApp {
                 );
             }
         });
-        encryptedMessageTextArea.setLineWrap(true);
-        decryptedMessage2TextArea.setLineWrap(true);
-        decryptedMessage1TextArea.setLineWrap(true);
     }
 
     /**
@@ -89,7 +86,7 @@ public class TextEncryptionApp {
             );
         }
         encryptedMessageTextArea.setText(
-                SudokuSteganography.performFilmSteganography(
+                SudokuSteganography.performSudokuSteganography(
                         String.valueOf(binaryRepresentation), message1TextPane.getText()
                 )
         );
