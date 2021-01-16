@@ -11,9 +11,9 @@ public class VerifyCreditCard {
     private JButton clearButton;
 
     /**
-     * Description
+     * Main function for the software. Create the JFrame and assign its content.
      *
-     * @param args description
+     * @param args Unused console args.
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Verify Credit Card Number");
@@ -24,7 +24,7 @@ public class VerifyCreditCard {
     }
 
     /**
-     * Description
+     * Create mouse click listeners for the GUI.
      */
     public VerifyCreditCard() {
         clearButton.addMouseListener(new MouseAdapter() {
@@ -42,7 +42,7 @@ public class VerifyCreditCard {
     }
 
     /**
-     * Description
+     * Clear all text panes on the GUI.
      */
     private void clearButtonClicked() {
         creditCardInputTextPane.setText("");
@@ -50,7 +50,8 @@ public class VerifyCreditCard {
     }
 
     /**
-     * Description
+     * Add all user input to an int array and perform a Luhn check on the credit card digits to check for a valid
+     * credit card number.
      */
     private void verifyCreditCardButtonClicked() {
         int[] creditCardArray = new int[16];

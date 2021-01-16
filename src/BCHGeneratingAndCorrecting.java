@@ -23,9 +23,9 @@ public class BCHGeneratingAndCorrecting {
     int[] inputArray = new int[10];
 
     /**
-     * Description
+     * Main function for the software. Create the JFrame and assign its content.
      *
-     * @param args Description
+     * @param args Unused console args.
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("BCH Generating and Correcting");
@@ -36,7 +36,7 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Create mouse click listeners for the GUI.
      */
     public BCHGeneratingAndCorrecting() {
         createCheckingDigitsButton.addMouseListener(new MouseAdapter() {
@@ -66,7 +66,7 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Clear all text panes on the GUI.
      */
     private void clearButtonClicked() {
         tenDigitInputTextPane.setText("");
@@ -77,7 +77,7 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Create the four checking digits for a BCH(10, 6) code.
      * TODO: Move this logic to CheckingDigitLibrary
      */
     private void createCheckingDigitsButtonClicked() {
@@ -107,7 +107,7 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Calculate the four syndromes from a 10 digit BCH(10, 6) code.
      */
     private void createSyndromesButtonClicked() {
         String userInput = tenDigitInputTextPane.getText();
@@ -129,7 +129,8 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Using the syndromes, calculate the number of errors in the code, and if there are less than two, calculate the
+     * error position and magnitudes in order to resolve them.
      * TODO: Potentially separate this logic into functions
      */
     private void identifyErrorsButtonClicked() {
@@ -200,11 +201,11 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Resolve a single error in a BCH(10,6) code.
      *
-     * @param errorPosition  Description
-     * @param errorMagnitude Description
-     * @return Description
+     * @param errorPosition  The position of the error in the BCH (10,6) code.
+     * @param errorMagnitude The magnitude of the error at the position.
+     * @return the corrected code.
      */
     private int[] resolveSingleError(int errorPosition, int errorMagnitude) {
         inputArray[errorPosition - 1] = ModuloLibrary.mod(inputArray[errorPosition - 1] - errorMagnitude);
@@ -212,13 +213,13 @@ public class BCHGeneratingAndCorrecting {
     }
 
     /**
-     * Description
+     * Resolve a double error in a BCH(10,6) code.
      *
-     * @param errorPosition1  Description
-     * @param errorPosition2  Description
-     * @param errorMagnitude1 Description
-     * @param errorMagnitude2 Description
-     * @return Description
+     * @param errorPosition1  The position of the first error in the BCH (10,6) code.
+     * @param errorPosition2  The position of the second error in the BCH (10,6) code.
+     * @param errorMagnitude1 The magnitude of the first error at the first position.
+     * @param errorMagnitude2 The magnitude of the second error at the second position.
+     * @return the corrected code.
      */
     private int[] resolveDoubleError(int errorPosition1, int errorPosition2, int errorMagnitude1, int errorMagnitude2) {
         inputArray[errorPosition1 - 1] = ModuloLibrary.mod(inputArray[errorPosition1 - 1] - errorMagnitude1);

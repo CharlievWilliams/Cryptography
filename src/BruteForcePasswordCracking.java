@@ -17,9 +17,9 @@ public class BruteForcePasswordCracking {
     private boolean hashFound;
 
     /**
-     * Description
+     * Main function for the software. Create the JFrame and assign its content.
      *
-     * @param args Description
+     * @param args Unused console args.
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Brute Force Password Cracking");
@@ -30,7 +30,7 @@ public class BruteForcePasswordCracking {
     }
 
     /**
-     * Description
+     * Create mouse click listeners for the GUI.
      */
     public BruteForcePasswordCracking() {
         bruteForcePasswordButton.addMouseListener(new MouseAdapter() {
@@ -62,7 +62,7 @@ public class BruteForcePasswordCracking {
     }
 
     /**
-     * Description
+     * Clear all text panes on the GUI.
      */
     private void clearButtonMouseClicked() {
         passwordInputTextPane.setText("");
@@ -72,7 +72,8 @@ public class BruteForcePasswordCracking {
     }
 
     /**
-     * Description
+     * Verify that the string in the text pane is a valid Sha1 hash, and print all possible recursive strings within a
+     * character set between 1 and 6 characters long.
      */
     private void verifyPasswordHash() throws NoSuchAlgorithmException {
         hashFound = false;
@@ -91,14 +92,18 @@ public class BruteForcePasswordCracking {
     }
 
     /**
-     * Description
+     * Verify that the string in the text pane is a valid Sha1 hash, and print all possible recursive strings within a
+     * character set between 1 and 6 characters long.
+     *
+     * TODO: Combine verifyPasswordHash and verifyBchHash and pass in a boolean for differences in functionality.
      */
     private void verifyBchHash() throws NoSuchAlgorithmException {
         hashFound = false;
         String hashedBch = bchInputTextPane.getText();
 
+        char[] characterSet = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
         if (Sha1Library.isValidSHA1(hashedBch)) {
-            char[] characterSet = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
             printBchRecursively(characterSet, "", characterSet.length, 6, hashedBch);
         } else {
             bchResultsTextArea.setText("Invalid input");
@@ -106,13 +111,14 @@ public class BruteForcePasswordCracking {
     }
 
     /**
-     * Description
+     * Recursively print the generated String and its hashed counterpart and compare it to the hash provided by the
+     * user.
      *
-     * @param set Description
-     * @param prefix Description
-     * @param setLength Description
-     * @param stringLength Description
-     * @param hashedPassword Description
+     * @param set The character set used for the string generation.
+     * @param prefix The String used for the creation of the generated String.
+     * @param setLength The length of the character set.
+     * @param stringLength The length of the generated strings.
+     * @param hashedPassword The hash that the generated hashes will be compared against.
      */
     private void printStringRecursively(char[] set, String prefix, int setLength, int stringLength, String hashedPassword) throws NoSuchAlgorithmException {
 
@@ -139,13 +145,15 @@ public class BruteForcePasswordCracking {
     }
 
     /**
-     * Description
+     * Recursively print the generated String and its hashed counterpart and compare it to the hash provided by the
+     * user. The code will generate 6 digit length BCH codes, and then create the remaining 4 checking digits. The full
+     * 10 digit code will be hashed and compared against the input hash.
      *
-     * @param set Description
-     * @param prefix Description
-     * @param setLength Description
-     * @param stringLength Description
-     * @param hashedPassword Description
+     * @param set The character set used for the string generation.
+     * @param prefix The String used for the creation of the generated String.
+     * @param setLength The length of the character set.
+     * @param stringLength The length of the generated strings.
+     * @param hashedPassword The hash that the generated hashes will be compared against.
      */
     private void printBchRecursively(char[] set, String prefix, int setLength, int stringLength, String hashedPassword) throws NoSuchAlgorithmException {
 

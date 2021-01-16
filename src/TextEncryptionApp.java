@@ -16,9 +16,9 @@ public class TextEncryptionApp {
     private JButton clearButton;
 
     /**
-     * Description
+     * Main function for the software. Create the JFrame and assign its content.
      *
-     * @param args description
+     * @param args Unused console args.
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Text Encryption App");
@@ -29,7 +29,7 @@ public class TextEncryptionApp {
     }
 
     /**
-     * Description
+     * Create mouse click listeners for the GUI.
      */
     public TextEncryptionApp() {
         clearButton.addMouseListener(new MouseAdapter() {
@@ -55,7 +55,7 @@ public class TextEncryptionApp {
     }
 
     /**
-     * Description
+     * Clear all text panes on the GUI.
      */
     private void clearButtonClicked() {
         message1TextPane.setText("");
@@ -67,7 +67,8 @@ public class TextEncryptionApp {
     }
 
     /**
-     * Description
+     * Perform a one time pad encryption on the secret message with the generated string from the Blum blum shlub
+     * generator.
      */
     public void oneTimePadEncryption() {
         // Retrieve text
@@ -93,7 +94,8 @@ public class TextEncryptionApp {
     }
 
     /**
-     * Description
+     * Perform a one time pad decryption on the secret message with the generated string from the Blum blum shlub
+     * generator.
      */
     public static void oneTimePadDecryption(String binaryRepresentation) {
         // TODO: Make this work
