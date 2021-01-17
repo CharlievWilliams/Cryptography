@@ -76,6 +76,8 @@ public class BruteForcePasswordCracking {
      * character set between 1 and 6 characters long.
      */
     private void verifyPasswordHash() throws NoSuchAlgorithmException {
+        long startTime = System.currentTimeMillis();
+
         hashFound = false;
         String hashedPassword = passwordInputTextPane.getText();
 
@@ -89,6 +91,10 @@ public class BruteForcePasswordCracking {
         } else {
             passwordResultsTextArea.setText("Invalid input");
         }
+        long endTime = System.currentTimeMillis();
+
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.println(duration);
     }
 
     /**
@@ -98,6 +104,7 @@ public class BruteForcePasswordCracking {
      * TODO: Combine verifyPasswordHash and verifyBchHash and pass in a boolean for differences in functionality.
      */
     private void verifyBchHash() throws NoSuchAlgorithmException {
+        long startTime = System.currentTimeMillis();
         hashFound = false;
         String hashedBch = bchInputTextPane.getText();
 
@@ -108,6 +115,9 @@ public class BruteForcePasswordCracking {
         } else {
             bchResultsTextArea.setText("Invalid input");
         }
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.println(duration);
     }
 
     /**

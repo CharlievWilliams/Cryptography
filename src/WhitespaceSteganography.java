@@ -5,18 +5,18 @@ public class WhitespaceSteganography {
      * representation into the whitespaces of the facade message.
      *
      * @param binaryRepresentation A binary representation of the secret message.
-     * @param normalMessage The facade message in String format.
+     * @param normalMessage        The facade message in String format.
      * @return The normal message with the secret message hidden within it by duplicating whitespace.
      */
-    public static String performSimpleSteganography(String binaryRepresentation, String normalMessage) {
+    public static String performWhitespaceSteganography(String binaryRepresentation, String normalMessage) {
 
-        // Format binary
         String formattedSecretMessage = binaryRepresentation.replaceAll("\\s+", "");
         formattedSecretMessage = formattedSecretMessage + "x ";
 
         int count = 0;
-        // Construct new message
+
         StringBuilder newMessage = new StringBuilder();
+
         for (int i = 0; i < normalMessage.length(); i++) {
 
             if (normalMessage.charAt(i) == ' ') {
@@ -49,12 +49,14 @@ public class WhitespaceSteganography {
      * facade message.
      *
      * @param steganographyMessage The message that has been created through whitespace steganography.
-     * @return The facade message in its original format.
+     * @return The facade message in its original format. TODO: Update
      */
-    public static String reverseSimpleSteganography(String steganographyMessage) {
+    public static Tuple<String, String> reverseWhitespaceSteganography(String steganographyMessage) {
+
         int count = 0;
+        int spaceCount = 0;
         boolean messageFound = false;
-        // Construct new message
+
         StringBuilder secretMessage = new StringBuilder();
         StringBuilder normalMessage = new StringBuilder();
 
@@ -64,10 +66,12 @@ public class WhitespaceSteganography {
                     normalMessage.append(" ");
                     secretMessage.append("0");
                     count++;
+                    spaceCount++;
                 } else if (steganographyMessage.charAt(count + 1) == ' ' && steganographyMessage.charAt(count + 2) != ' ') {
                     normalMessage.append(" ");
                     secretMessage.append("1");
                     count += 2;
+                    spaceCount++;
                 } else if (steganographyMessage.charAt(count + 1) == ' ' && steganographyMessage.charAt(count + 2) == ' ') {
                     normalMessage.append(" ");
                     count += 3;
@@ -77,9 +81,12 @@ public class WhitespaceSteganography {
                 normalMessage.append(steganographyMessage.charAt(count));
                 count++;
             }
+            if (spaceCount == 8) {
+                spaceCount = 0;
+                secretMessage.append(" ");
+            }
         }
 
-        TextEncryptionApp.oneTimePadDecryption(String.valueOf(secretMessage));
-        return String.valueOf(normalMessage);
+        return new Tuple<>(String.valueOf(normalMessage), String.valueOf(secretMessage));
     }
 }

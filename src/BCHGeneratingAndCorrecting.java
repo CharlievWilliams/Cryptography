@@ -18,8 +18,6 @@ public class BCHGeneratingAndCorrecting {
 
     int checkingDigit1, checkingDigit2, checkingDigit3, checkingDigit4; // Checking digits
     int syndrome1, syndrome2, syndrome3, syndrome4; // Syndromes
-    int p, q, r; // Error position and magnitude calculators
-    int errorMagnitude1, errorPosition1, errorPosition2, errorMagnitude2;
     int[] inputArray = new int[10];
 
     /**
@@ -134,18 +132,20 @@ public class BCHGeneratingAndCorrecting {
      * TODO: Potentially separate this logic into functions
      */
     private void identifyErrorsButtonClicked() {
+        int errorMagnitude1, errorPosition1, errorPosition2, errorMagnitude2;
+
         if (syndrome1 == 0 && syndrome2 == 0 && syndrome3 == 0 && syndrome4 == 0) { // No errors
             bchDecoderResultsTextArea.setText("No errors");
         } else {
-            p = ModuloLibrary.mod(syndrome2 * syndrome2 - syndrome1 * syndrome3);
-            q = ModuloLibrary.mod(syndrome1 * syndrome4 - syndrome2 * syndrome3);
-            r = ModuloLibrary.mod(syndrome3 * syndrome3 - syndrome2 * syndrome4);
+            int p = ModuloLibrary.mod(syndrome2 * syndrome2 - syndrome1 * syndrome3);
+            int q = ModuloLibrary.mod(syndrome1 * syndrome4 - syndrome2 * syndrome3);
+            int r = ModuloLibrary.mod(syndrome3 * syndrome3 - syndrome2 * syndrome4);
             if (p == 0 && q == 0 && r == 0) { // Single Error
                 errorMagnitude1 = syndrome1;
                 errorPosition1 = (syndrome2 / errorMagnitude1) % 11;
                 int[] result = resolveSingleError(errorPosition1, errorMagnitude1);
                 bchDecoderResultsTextArea.setText(
-                        "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|\\]|,|\\s", "")
+                        "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|]|,|\\s", "")
                 );
             } else {
                 /*
@@ -191,7 +191,7 @@ public class BCHGeneratingAndCorrecting {
 
                     if (!isTen) { // Check for scenario with double errors
                         bchDecoderResultsTextArea.setText("Two errors. Corrected to " + Arrays.toString(result)
-                                .replaceAll("\\[|\\]|,|\\s", ""));
+                                .replaceAll("\\[|]|,|\\s", ""));
                     } else { // More than two errors
                         bchDecoderResultsTextArea.setText("More than two errors");
                     }

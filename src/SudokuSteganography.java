@@ -16,12 +16,11 @@ public class SudokuSteganography {
      */
     public static String performSudokuSteganography(String binaryRepresentation, String normalMessage) {
 
-        // Format binary
         String formattedSecretMessage = binaryRepresentation.replaceAll("\\s+", "");
         formattedSecretMessage = formattedSecretMessage + "x";
 
         int count = 0;
-        // Construct new message
+
         StringBuilder newMessage = new StringBuilder();
         Random random = new Random();
 
@@ -66,14 +65,14 @@ public class SudokuSteganography {
      * message.
      *
      * @param steganographyMessage The message that has been created through sudoku steganography.
-     * @return The facade message in its original format.
+     * @return The facade message in its original format. TODO: Update
      */
-    public static String reverseSudokuSteganography(String steganographyMessage) {
+    public static Tuple<String, String> reverseSudokuSteganography(String steganographyMessage) {
 
         int count = 0;
+        int spaceCount = 0;
         boolean normalMessageEnded = false;
 
-        // Construct new message
         StringBuilder secretMessage = new StringBuilder();
         StringBuilder normalMessage = new StringBuilder();
 
@@ -88,24 +87,28 @@ public class SudokuSteganography {
 
         while (count < steganographyMessage.length()) {
             if (steganographyMessage.charAt(count) == '9') {
-                TextEncryptionApp.oneTimePadDecryption(String.valueOf(secretMessage));
-                return String.valueOf(normalMessage);
+                return new Tuple<>(String.valueOf(normalMessage), String.valueOf(secretMessage));
             } else if (steganographyMessage.charAt(count) == '1' ||
                     steganographyMessage.charAt(count) == '3' ||
                     steganographyMessage.charAt(count) == '6' ||
                     steganographyMessage.charAt(count) == '8') {
                 secretMessage.append("1");
+                spaceCount++;
             }
             else if (steganographyMessage.charAt(count) == '2' ||
                     steganographyMessage.charAt(count) == '4' ||
                     steganographyMessage.charAt(count) == '5' ||
                     steganographyMessage.charAt(count) == '7') {
                 secretMessage.append("0");
+                spaceCount++;
+            }
+            if (spaceCount == 8) {
+                secretMessage.append(" ");
+                spaceCount = 0;
             }
             count++;
         }
 
-        TextEncryptionApp.oneTimePadDecryption(String.valueOf(secretMessage));
-        return String.valueOf(normalMessage);
+        return new Tuple<>(String.valueOf(normalMessage), String.valueOf(secretMessage));
     }
 }

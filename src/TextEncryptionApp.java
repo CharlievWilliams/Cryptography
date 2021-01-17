@@ -47,9 +47,9 @@ public class TextEncryptionApp {
         decryptButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                decryptedMessage2TextArea.setText(
-                        SudokuSteganography.reverseSudokuSteganography(encryptedMessageTextPane.getText())
-                );
+                Tuple<String, String> results = SudokuSteganography.reverseSudokuSteganography(encryptedMessageTextPane.getText());
+                oneTimePadDecryption(results.y);
+                decryptedMessage2TextArea.setText(results.x);
             }
         });
     }
@@ -77,29 +77,33 @@ public class TextEncryptionApp {
         // Create key
         String key = PseudoRandomGenerator.pseudoRandomGenerator(plaintext.length());
 
-        StringBuilder binaryRepresentation = new StringBuilder();
-        int[] encrypted = new int[key.length()];
+        // Encrypt with one time pad encryption
+        String encoded = OneTimePadEncryptionLibrary.encode(plaintext, key);
 
-        for (int i = 0; i < plaintext.length(); i++) {
-            encrypted[i] = (plaintext.charAt(i) ^ key.charAt(i));
-            binaryRepresentation.append(String.format("%8s", Integer.toBinaryString(encrypted[i] & 0xFF))
-                    .replace(' ', '0')
-            );
-        }
-        encryptedMessageTextArea.setText(
-                SudokuSteganography.performSudokuSteganography(
-                        String.valueOf(binaryRepresentation), message1TextPane.getText()
-                )
+        String binaryRepresentation = OneTimePadEncryptionLibrary.stringToBinary(encoded);
+
+        encryptedMessageTextArea.setText(SudokuSteganography.
+                performSudokuSteganography(binaryRepresentation, message1TextPane.getText())
         );
     }
 
     /**
      * Perform a one time pad decryption on the secret message with the generated string from the Blum blum shlub
      * generator.
+     *
+     * @param binaryRepresentation The binary representation of the encrypted secret message.
      */
-    public static void oneTimePadDecryption(String binaryRepresentation) {
-        // TODO: Make this work
+    public void oneTimePadDecryption(String binaryRepresentation) {
 
-        // decryptedMessage1TextArea.setText(binaryRepresentation);
+        // Convert secret message to string
+        String encoded = OneTimePadEncryptionLibrary.BinaryToString(binaryRepresentation);
+
+        // Create key
+        String key = PseudoRandomGenerator.pseudoRandomGenerator(encoded.length());
+
+        // Decode message with the same key
+        String decoded = OneTimePadEncryptionLibrary.decode(encoded, key);
+
+        decryptedMessage1TextArea.setText(decoded);
     }
 }
