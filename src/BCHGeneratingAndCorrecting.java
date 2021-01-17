@@ -143,10 +143,14 @@ public class BCHGeneratingAndCorrecting {
             if (p == 0 && q == 0 && r == 0) { // Single Error
                 errorMagnitude1 = syndrome1;
                 errorPosition1 = (syndrome2 / errorMagnitude1) % 11;
-                int[] result = resolveSingleError(errorPosition1, errorMagnitude1);
-                bchDecoderResultsTextArea.setText(
-                        "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|]|,|\\s", "")
-                );
+                try {
+                    int[] result = resolveSingleError(errorPosition1, errorMagnitude1);
+                    bchDecoderResultsTextArea.setText(
+                            "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|]|,|\\s", "")
+                    );
+                } catch (Exception e) {
+                    bchDecoderResultsTextArea.setText("More than two errors");
+                }
             } else {
                 /*
                  * Calculate error positions - Formulae for error positions under mod 11
