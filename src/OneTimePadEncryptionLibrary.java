@@ -6,47 +6,58 @@ import java.io.IOException;
 public class OneTimePadEncryptionLibrary {
 
     /**
-     * Description
+     * Perform one time pad encryption with the pseudo random generated key.
      *
-     * @param string Description
-     * @param key Description
-     * @return Description
+     * @param string The secret message.
+     * @param key The pseudo random generated key.
+     * @return The encrypted secret message.
      */
     public static String encode(String string, String key) {
         return base64Encode(xorWithKey(string.getBytes(), key.getBytes()));
     }
 
     /**
-     * Description
+     * Perform one time pad decryption with the pseudo random generated key.
      *
-     * @param string Description
-     * @param key Description
-     * @return Description
+     * @param string The secret message.
+     * @param key The pseudo random generated key.
+     * @return The decrypted secret message.
      */
     public static String decode(String string, String key) {
         return new String(xorWithKey(base64Decode(string), key.getBytes()));
     }
 
     /**
-     * Description
+     * Perform a xor function between the message and the key to encrypt the message.
      *
-     * @param a Description
-     * @param key Description
-     * @return Description
+     * @param string The secret message in bytes.
+     * @param key The pseudo random generated key in bytes.
+     * @return The decrypted secret message in bytes.
      */
-    private static byte[] xorWithKey(byte[] a, byte[] key) {
-        byte[] out = new byte[a.length];
-        for (int i = 0; i < a.length; i++) {
-            out[i] = (byte) (a[i] ^ key[i % key.length]);
+    private static byte[] xorWithKey(byte[] string, byte[] key) {
+        byte[] out = new byte[string.length];
+        for (int i = 0; i < string.length; i++) {
+            out[i] = (byte) (string[i] ^ key[i % key.length]);
         }
         return out;
     }
 
     /**
-     * Description
+     * Convert byte representation to String representation.
      *
-     * @param string Description
-     * @return Description
+     * @param bytes The byte representation of a String.
+     * @return A human readable string.
+     */
+    private static String base64Encode(byte[] bytes) {
+        BASE64Encoder encoder = new BASE64Encoder();
+        return encoder.encode(bytes).replaceAll("\\s", "");
+    }
+
+    /**
+     * Convert String representation to byte representation.
+     *
+     * @param string A human readable string.
+     * @return The byte representation of the string.
      */
     private static byte[] base64Decode(String string) {
         BASE64Decoder decoder = new BASE64Decoder();
@@ -58,21 +69,10 @@ public class OneTimePadEncryptionLibrary {
     }
 
     /**
-     * Description
+     * Convert a string to a binary string representation.
      *
-     * @param bytes Description
-     * @return Description
-     */
-    private static String base64Encode(byte[] bytes) {
-        BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(bytes).replaceAll("\\s", "");
-    }
-
-    /**
-     * Description
-     *
-     * @param text Description
-     * @return Description
+     * @param text A human readable string.
+     * @return The binary representation of the string.
      */
     public static String stringToBinary(String text) {
         StringBuilder binaryString= new StringBuilder();
@@ -89,10 +89,10 @@ public class OneTimePadEncryptionLibrary {
     }
 
     /**
-     * Description
+     * Convert a binary representation string to a human readable string.
      *
-     * @param binaryCode Description
-     * @return Description
+     * @param binaryCode The binary representation of a string.
+     * @return A human readable version of that string.
      */
     public static String BinaryToString(String binaryCode) {
         String[] code = binaryCode.split(" ");

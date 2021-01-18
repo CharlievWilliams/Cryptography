@@ -14,6 +14,8 @@ public class TextEncryptionApp {
     private JButton encryptButton;
     private JButton decryptButton;
     private JButton clearButton;
+    private JRadioButton whiteSpaceRadioButton;
+    private JRadioButton sudokuRadioButton;
 
     /**
      * Main function for the software. Create the JFrame and assign its content.
@@ -47,7 +49,12 @@ public class TextEncryptionApp {
         decryptButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Tuple<String, String> results = SudokuSteganography.reverseSudokuSteganography(encryptedMessageTextPane.getText());
+                Tuple<String, String> results;
+                if (whiteSpaceRadioButton.isSelected()) {
+                    results = WhitespaceSteganography.reverseWhitespaceSteganography(encryptedMessageTextPane.getText());
+                } else {
+                    results = SudokuSteganography.reverseSudokuSteganography(encryptedMessageTextPane.getText());
+                }
                 oneTimePadDecryption(results.y);
                 decryptedMessage2TextArea.setText(results.x);
             }
@@ -82,9 +89,15 @@ public class TextEncryptionApp {
 
         String binaryRepresentation = OneTimePadEncryptionLibrary.stringToBinary(encoded);
 
-        encryptedMessageTextArea.setText(SudokuSteganography.
-                performSudokuSteganography(binaryRepresentation, message1TextPane.getText())
-        );
+        if (whiteSpaceRadioButton.isSelected()) {
+            encryptedMessageTextArea.setText(WhitespaceSteganography.
+                    performWhitespaceSteganography(binaryRepresentation, message1TextPane.getText())
+            );
+        } else {
+            encryptedMessageTextArea.setText(SudokuSteganography.
+                    performSudokuSteganography(binaryRepresentation, message1TextPane.getText())
+            );
+        }
     }
 
     /**

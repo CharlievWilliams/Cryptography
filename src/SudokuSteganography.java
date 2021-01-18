@@ -65,7 +65,7 @@ public class SudokuSteganography {
      * message.
      *
      * @param steganographyMessage The message that has been created through sudoku steganography.
-     * @return The facade message in its original format. TODO: Update
+     * @return The facade message in its original format and the binary representation of the secret message.
      */
     public static Tuple<String, String> reverseSudokuSteganography(String steganographyMessage) {
 

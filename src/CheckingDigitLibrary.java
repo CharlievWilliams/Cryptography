@@ -9,8 +9,12 @@ public class CheckingDigitLibrary {
     public static String createCheckingDigits(String input) {
 
         int[] inputArray = new int[6];
-        for (int i = 0; i < input.length(); i++) {
-            inputArray[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+        try {
+            for (int i = 0; i < input.length(); i++) {
+                inputArray[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+            }
+        } catch (Exception e) {
+            return "Invalid input";
         }
 
         int checkingDigit1 = calculateDigit7(inputArray);

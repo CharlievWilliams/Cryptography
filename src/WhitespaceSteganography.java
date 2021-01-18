@@ -49,7 +49,7 @@ public class WhitespaceSteganography {
      * facade message.
      *
      * @param steganographyMessage The message that has been created through whitespace steganography.
-     * @return The facade message in its original format. TODO: Update
+     * @return The facade message in its original format and the binary representation of the secret message.
      */
     public static Tuple<String, String> reverseWhitespaceSteganography(String steganographyMessage) {
 

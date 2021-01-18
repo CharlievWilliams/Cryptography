@@ -76,31 +76,28 @@ public class BCHGeneratingAndCorrecting {
 
     /**
      * Create the four checking digits for a BCH(10, 6) code.
-     * TODO: Move this logic to CheckingDigitLibrary
      */
     private void createCheckingDigitsButtonClicked() {
 
-        int[] inputArray = new int[6];
         String input = sixDigitInputTextPane.getText();
+        String bchCode = CheckingDigitLibrary.createCheckingDigits(input);
 
-        try {
-            for (int i = 0; i < input.length(); i++) {
-                inputArray[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
-            }
-
-            checkingDigit1 = CheckingDigitLibrary.calculateDigit7(inputArray);
-            checkingDigit2 = CheckingDigitLibrary.calculateDigit8(inputArray);
-            checkingDigit3 = CheckingDigitLibrary.calculateDigit9(inputArray);
-            checkingDigit4 = CheckingDigitLibrary.calculateDigit10(inputArray);
-
-            if (checkingDigit1 == 10 || checkingDigit2 == 10 || checkingDigit3 == 10 || checkingDigit4 == 10) {
-                checkDigitResultsTextArea.setText("Unusable Number");
-            } else {
-                checkDigitResultsTextArea.setText(input + checkingDigit1 + checkingDigit2 + checkingDigit3 + checkingDigit4);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (bchCode.equals("Unusable number")) {
+            checkDigitResultsTextArea.setText("Unusable Number");
+        } else if (bchCode.equals("Invalid input")) {
             checkDigitResultsTextArea.setText("Invalid input");
+        } else {
+            int[] inputArray = new int[10];
+            for (int i = 6; i < bchCode.length(); i++) {
+                inputArray[i] = Integer.parseInt(String.valueOf(bchCode.charAt(i)));
+            }
+
+            checkingDigit1 = inputArray[6];
+            checkingDigit2 = inputArray[7];
+            checkingDigit3 = inputArray[8];
+            checkingDigit4 = inputArray[9];
+
+            checkDigitResultsTextArea.setText(input + checkingDigit1 + checkingDigit2 + checkingDigit3 + checkingDigit4);
         }
     }
 
@@ -129,7 +126,6 @@ public class BCHGeneratingAndCorrecting {
     /**
      * Using the syndromes, calculate the number of errors in the code, and if there are less than two, calculate the
      * error position and magnitudes in order to resolve them.
-     * TODO: Potentially separate this logic into functions
      */
     private void identifyErrorsButtonClicked() {
         int errorMagnitude1, errorPosition1, errorPosition2, errorMagnitude2;
@@ -141,23 +137,13 @@ public class BCHGeneratingAndCorrecting {
             int q = ModuloLibrary.mod(syndrome1 * syndrome4 - syndrome2 * syndrome3);
             int r = ModuloLibrary.mod(syndrome3 * syndrome3 - syndrome2 * syndrome4);
             if (p == 0 && q == 0 && r == 0) { // Single Error
-                errorMagnitude1 = syndrome1;
-                errorPosition1 = (syndrome2 / errorMagnitude1) % 11;
-                try {
-                    int[] result = resolveSingleError(errorPosition1, errorMagnitude1);
-                    bchDecoderResultsTextArea.setText(
-                            "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|]|,|\\s", "")
-                    );
-                } catch (Exception e) {
-                    bchDecoderResultsTextArea.setText("More than two errors");
-                }
+                singleErrorScenario();
             } else {
                 /*
                  * Calculate error positions - Formulae for error positions under mod 11
                  * errorPosition1 = (-Q + sqrt(Q * Q - 4 * P * R)) / 2 * P
                  * errorPosition1 = (-Q - sqrt(Q * Q - 4 * P * R)) / 2 * P
                  * */
-
                 int innerBrackets = ModuloLibrary.minus(ModuloLibrary.squared(q), ModuloLibrary.mod(4 * p * r));
                 // Check for scenario with more than two errors
                 if (ModuloLibrary.squareRoot(innerBrackets) == 0) {
@@ -174,7 +160,6 @@ public class BCHGeneratingAndCorrecting {
                  * errorMagnitude2 = (errorPosition1 * syndrome1 - syndrome2) / (errorPosition1 - errorPosition2)
                  * errorMagnitude1 = syndrome1 - errorMagnitude2
                  * */
-
                 errorMagnitude2 = ModuloLibrary.inverse(ModuloLibrary.minus(ModuloLibrary.mod(
                         errorPosition1 * syndrome1), syndrome2), ModuloLibrary.minus(errorPosition1, errorPosition2));
                 errorMagnitude1 = ModuloLibrary.minus(syndrome1, errorMagnitude2);
@@ -183,9 +168,10 @@ public class BCHGeneratingAndCorrecting {
                 if (errorPosition1 == 0 || errorPosition2 == 0) {
                     bchDecoderResultsTextArea.setText("More than two errors");
                 } else {
+
+                    // Check for scenario with more than two errors
                     int[] result = resolveDoubleError(errorPosition1, errorPosition2, errorMagnitude1, errorMagnitude2);
                     boolean isTen = false;
-
                     for (int digits : result) {
                         if (digits == 10) {
                             isTen = true;
@@ -201,6 +187,22 @@ public class BCHGeneratingAndCorrecting {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Calculate the error position and magnitude when solving a single error.
+     */
+    private void singleErrorScenario() {
+        int errorMagnitude1 = syndrome1;
+        int errorPosition1 = (syndrome2 / errorMagnitude1) % 11;
+        try {
+            int[] result = resolveSingleError(errorPosition1, errorMagnitude1);
+            bchDecoderResultsTextArea.setText(
+                    "One error. Corrected to " + Arrays.toString(result).replaceAll("\\[|]|,|\\s", "")
+            );
+        } catch (Exception e) {
+            bchDecoderResultsTextArea.setText("More than two errors");
         }
     }
 

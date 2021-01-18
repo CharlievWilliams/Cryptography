@@ -92,16 +92,13 @@ public class BruteForcePasswordCracking {
             passwordResultsTextArea.setText("Invalid input");
         }
         long endTime = System.currentTimeMillis();
-
-        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
         System.out.println(duration);
     }
 
     /**
      * Verify that the string in the text pane is a valid Sha1 hash, and print all possible recursive strings within a
      * character set between 1 and 6 characters long.
-     *
-     * TODO: Combine verifyPasswordHash and verifyBchHash and pass in a boolean for differences in functionality.
      */
     private void verifyBchHash() throws NoSuchAlgorithmException {
         long startTime = System.currentTimeMillis();
@@ -116,7 +113,7 @@ public class BruteForcePasswordCracking {
             bchResultsTextArea.setText("Invalid input");
         }
         long endTime = System.currentTimeMillis();
-        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
         System.out.println(duration);
     }
 
