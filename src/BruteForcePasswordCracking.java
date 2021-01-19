@@ -134,9 +134,7 @@ public class BruteForcePasswordCracking {
         }
 
         if (stringLength == 0) {
-            System.out.println("Generated String: " + prefix);
             String hashedString = Sha1Library.SHA1(prefix);
-            System.out.println("Hashed String: " + hashedString);
 
             if (hashedString.equals(hashedPassword)) {
                 hashFound = true;
@@ -169,11 +167,8 @@ public class BruteForcePasswordCracking {
         }
 
         if (stringLength == 0) {
-            System.out.println("Generated String: " + prefix);
             String bchCode = CheckingDigitLibrary.createCheckingDigits(prefix);
-            System.out.println("Full BCH Code: " + bchCode);
             String hashedString = Sha1Library.SHA1(bchCode);
-            System.out.println("Hashed String: " + hashedString);
 
             if (hashedString.equals(hashedPassword)) {
                 hashFound = true;
